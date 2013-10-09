@@ -9,23 +9,32 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Julio
  */
 public class Game extends javax.swing.JFrame {
-
+    Jugador j1;
+    Jugador j2;
+    int gameControl;
+    boolean ciega;
+    boolean turno;
+    int pozo;
     BufferedImage deck, back;
     Carta[] juego;
     BitSet b;
-
+    void log(String newLine){
+        String actual = jTextArea1.getText();
+        jTextArea1.setText(actual+newLine+"\n");
+    }
     class Card {
 
         final static int CORAZONES = 0;
@@ -34,10 +43,52 @@ public class Game extends javax.swing.JFrame {
         final static int TREBOLES = 3;
     }
 
+    void GameControl(int i){
+        mostrarCartas(i);
+        playerStatus1.setBorder(turno);
+        playerStatus2.setBorder(!turno);
+        if(turno){
+            playerStatus1.setVisibleButton(true);
+        }else{
+            playerStatus1.setVisibleButton(false);
+        }
+    }
+    void setObligada(){
+        int a,c;
+        
+        if(ciega){
+            a = 100;
+            c = 50;
+        }else{
+            a = 50;
+            c = 100;
+        }
+        playerStatus1.setObligada(a);
+        playerStatus2.setObligada(c);
+    }
+    void nuevoJuego(Jugador j1,Jugador j2){
+        log("Juego Nuevo.");
+        ciega = true;
+        this.j1=j1;
+        this.j2=j2;
+        setObligada();
+        ciega = !ciega;
+        gameControl = 0;
+        turno=true;
+        //inicio
+        iniciarMesa();
+        
+        b = new BitSet(52);
+        b.set(0, 51, false);
+        Repartir();
+        GameControl(0);
+    }
+    
     /**
      * Creates new form Game
      */
     void Repartir() {
+        log("Repartir.");
         juego = new Carta[9];
         Random r = new Random();
         int x;
@@ -46,10 +97,13 @@ public class Game extends javax.swing.JFrame {
             b.set(x, true);
             juego[i] = new Carta(x);
         }
+        playerStatus1.setDinero(j1.getDinero());
+        playerStatus2.setDinero(j2.getDinero());
     }
 
     void mostrarCartas(int i) {
         Carta c1, c2, c3, c4, c5;
+        
         c1 = c2 = c3 = c4 = c5 = new Carta(-1, 0);
         switch (i) {
             case 4:
@@ -71,7 +125,7 @@ public class Game extends javax.swing.JFrame {
 
     void iniciarMesa() {
         cargarMesa(new Carta(-1, 0), new Carta(-1, 0), new Carta(-1, 0), new Carta(-1, 0), new Carta(-1, 0));
-        cargarPlayer1(new Carta(0, 12), new Carta(2, 0));
+        cargarPlayer1(new Carta(-1, 0), new Carta(-1, 0));
         cargarPlayer2(new Carta(-1, 0), new Carta(-1, 0));
     }
 
@@ -82,12 +136,7 @@ public class Game extends javax.swing.JFrame {
         } catch (IOException e) {
         }
         initComponents();
-        iniciarMesa();
-
-        b = new BitSet(52);
-        b.set(0, 51, false);
-        Repartir();
-        mostrarCartas(2);
+        log("Interfaz cargada.");
     }
 
     /**
@@ -102,16 +151,72 @@ public class Game extends javax.swing.JFrame {
         table1 = new pokerbot.Table();
         playerGraphics1 = new pokerbot.PlayerGraphics();
         playerGraphics2 = new pokerbot.PlayerGraphics();
+        playerStatus1 = new pokerbot.PlayerStatus();
+        playerStatus2 = new pokerbot.PlayerStatus();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(null);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(table1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, -1, -1));
         getContentPane().add(playerGraphics1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 0, 320, -1));
         getContentPane().add(playerGraphics2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 440, 320, -1));
+        getContentPane().add(playerStatus1, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 490, -1, -1));
+        getContentPane().add(playerStatus2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, -1, -1));
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setEnabled(false);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 30, 280, 630));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Log");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 4, 260, 20));
+
+        jMenu1.setText("Juego");
+
+        jMenuItem1.setText("Nuevo Juego");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Ayuda");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        int accion;
+        Object[] Opciones = {"Jugador vs AI","AI vs AI"};
+        accion = JOptionPane.showOptionDialog(null, "Elija el modo de juego", "Juego Nuevo", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, Opciones, null);
+        if(accion==0){
+            nuevoJuego(new Humano(1000), new Humano(1000));
+            playerStatus2.setVisibleButton(false);
+            playerStatus1.setEnabledButton(false);
+            playerStatus1.setVisibleButton(true);
+        }else{
+            nuevoJuego(new Humano(1000),null);//new AI(1000)
+            playerStatus1.setVisibleButton(false);
+            playerStatus2.setVisibleButton(false);
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -136,30 +241,29 @@ public class Game extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
-        Game _this = new Game();
+        
         /* Set the Nimbus look and feel */
+        
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                System.out.println(info.getName());
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            System.out.println("lol");
             java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        
         //</editor-fold>
-
+        Game _this = new Game();
         _this.setVisible(true);
     }
 
@@ -191,8 +295,17 @@ public class Game extends javax.swing.JFrame {
         return bi.getSubimage(225 * y, 315 * x, 225, 315);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private pokerbot.PlayerGraphics playerGraphics1;
     private pokerbot.PlayerGraphics playerGraphics2;
+    private pokerbot.PlayerStatus playerStatus1;
+    private pokerbot.PlayerStatus playerStatus2;
     private pokerbot.Table table1;
     // End of variables declaration//GEN-END:variables
 }
