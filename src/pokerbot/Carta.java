@@ -11,10 +11,24 @@ package pokerbot;
 public class Carta implements Comparable<Carta>{
     int valor;
     int mazo;
+    int index;
 
-    public Carta( int mazo,int valor) {
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public Carta(int mazo, int valor) {
         this.valor = valor;
         this.mazo = mazo;
+    }
+    public Carta(int id){
+        this.index = id;
+        this.valor = id%13;
+        this.mazo = id/13;
     }
 
     public int getValor() {

@@ -4,12 +4,12 @@
  */
 package pokerbot;
 
-
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Random;
 import javax.imageio.ImageIO;
@@ -21,58 +21,69 @@ import javax.swing.JLabel;
  * @author Julio
  */
 public class Game extends javax.swing.JFrame {
-    BufferedImage deck,back;
-    Carta [] juego;
+
+    BufferedImage deck, back;
+    Carta[] juego;
     BitSet b;
-    class Card{
+
+    class Card {
+
         final static int CORAZONES = 0;
         final static int PICAS = 1;
         final static int DIAMANTES = 2;
         final static int TREBOLES = 3;
     }
+
     /**
      * Creates new form Game
      */
-    void Repartir(){
+    void Repartir() {
         juego = new Carta[9];
         Random r = new Random();
         int x;
-        for(int i=0;i<9;i++){
-            while(b.get(x=Math.abs(r.nextInt()%52))==true);
+        for (int i = 0; i < 9; i++) {
+            while (b.get(x = Math.abs(r.nextInt() % 52)) == true);
             b.set(x, true);
-            juego[i]=new Carta(((x)/13), x%13);
+            juego[i] = new Carta(x);
         }
     }
-    void mostrarCartas(int i){
-        Carta c1,c2,c3,c4,c5;
-        c1 = c2 = c3 =c4 =c5 = new Carta(-1,0);
-        switch(i){
-            case 4: cargarPlayer2(juego[2], juego[3]);
-            case 3: c5=juego[8];
-            case 2: c4=juego[7];
-            case 1: c1=juego[4];
-                    c2=juego[5];
-                    c3=juego[6];
-                    cargarMesa(c1, c2, c3, c4, c5);
-            case 0: cargarPlayer1(juego[0], juego[1]);
-                
+
+    void mostrarCartas(int i) {
+        Carta c1, c2, c3, c4, c5;
+        c1 = c2 = c3 = c4 = c5 = new Carta(-1, 0);
+        switch (i) {
+            case 4:
+                cargarPlayer2(juego[2], juego[3]);
+            case 3:
+                c5 = juego[8];
+            case 2:
+                c4 = juego[7];
+            case 1:
+                c1 = juego[4];
+                c2 = juego[5];
+                c3 = juego[6];
+                cargarMesa(c1, c2, c3, c4, c5);
+            case 0:
+                cargarPlayer1(juego[0], juego[1]);
+
         }
     }
-    void iniciarMesa(){
-        cargarMesa(new Carta(-1,0), new Carta(-1,0), new Carta(-1,0), new Carta(-1,0), new Carta(-1,0));
-        cargarPlayer1(new Carta(0,12),new Carta(2,0));
-        cargarPlayer2(new Carta(-1,0),new Carta(-1,0));
+
+    void iniciarMesa() {
+        cargarMesa(new Carta(-1, 0), new Carta(-1, 0), new Carta(-1, 0), new Carta(-1, 0), new Carta(-1, 0));
+        cargarPlayer1(new Carta(0, 12), new Carta(2, 0));
+        cargarPlayer2(new Carta(-1, 0), new Carta(-1, 0));
     }
+
     public Game() {
-        try{
+        try {
             deck = ImageIO.read(new File("src/img/poker.cards.bypx.png"));
             back = ImageIO.read(new File("src/img/playing-card-back-214x300.jpg"));
-        }catch(IOException e){
-            
+        } catch (IOException e) {
         }
         initComponents();
         iniciarMesa();
-        
+
         b = new BitSet(52);
         b.set(0, 51, false);
         Repartir();
@@ -105,22 +116,25 @@ public class Game extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public void cargarMesa(Carta c1,Carta c2,Carta c3,Carta c4,Carta c5){
+    public void cargarMesa(Carta c1, Carta c2, Carta c3, Carta c4, Carta c5) {
         table1.getTable1().setIcon(ObtenerImagen(c1));
         table1.getTable2().setIcon(ObtenerImagen(c2));
         table1.getTable3().setIcon(ObtenerImagen(c3));
         table1.getTable4().setIcon(ObtenerImagen(c4));
         table1.getTable5().setIcon(ObtenerImagen(c5));
-        
+
     }
-    public void cargarPlayer1(Carta c1, Carta c2){
+
+    public void cargarPlayer1(Carta c1, Carta c2) {
         playerGraphics2.getCardGraphic1().setIcon(ObtenerImagen(c1));
         playerGraphics2.getCardGraphic2().setIcon(ObtenerImagen(c2));
     }
-    public void cargarPlayer2(Carta c1, Carta c2){
+
+    public void cargarPlayer2(Carta c1, Carta c2) {
         playerGraphics1.getCardGraphic1().setIcon(ObtenerImagen(c1));
         playerGraphics1.getCardGraphic2().setIcon(ObtenerImagen(c2));
     }
+
     public static void main(String args[]) {
         Game _this = new Game();
         /* Set the Nimbus look and feel */
@@ -148,31 +162,34 @@ public class Game extends javax.swing.JFrame {
 
         _this.setVisible(true);
     }
-    ImageIcon ObtenerImagen(Carta c){
-        if(c.mazo==-1)
-            return new ImageIcon(resize(back,160,220));
-        return new ImageIcon(resize(getCard(deck,c),160,220));
+
+    ImageIcon ObtenerImagen(Carta c) {
+        if (c.mazo == -1) {
+            return new ImageIcon(resize(back, 160, 220));
+        }
+        return new ImageIcon(resize(getCard(deck, c), 160, 220));
     }
-    public static BufferedImage resize(BufferedImage image, int width, int height){
-        BufferedImage bi = new BufferedImage(width,height,BufferedImage.TRANSLUCENT);
+
+    public static BufferedImage resize(BufferedImage image, int width, int height) {
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
         Graphics2D g2d = (Graphics2D) bi.createGraphics();
-        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY));
-        g2d.drawImage(image,0,0,width,height,null);
+        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+        g2d.drawImage(image, 0, 0, width, height, null);
         g2d.dispose();
         return bi;
     }
-    public static BufferedImage getCard(BufferedImage bi,Carta c){
+
+    public static BufferedImage getCard(BufferedImage bi, Carta c) {
         int x, y;
         x = c.mazo;
         y = c.valor;
-        if (x==-1){
+        if (x == -1) {
             x = 0;
             y = 0;
         }
-        System.out.println(x+" "+y);
-        return bi.getSubimage(225*y, 315*x, 225, 315);
+        System.out.println(x + " " + y);
+        return bi.getSubimage(225 * y, 315 * x, 225, 315);
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private pokerbot.PlayerGraphics playerGraphics1;
     private pokerbot.PlayerGraphics playerGraphics2;
