@@ -48,26 +48,26 @@ public class PlayerGraphics extends javax.swing.JPanel {
         cardGraphic1 = new javax.swing.JLabel();
         cardGraphic2 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(315, 225));
-        setMinimumSize(new java.awt.Dimension(315, 225));
-        setPreferredSize(new java.awt.Dimension(315, 225));
+        setMaximumSize(null);
+        setMinimumSize(null);
+        setPreferredSize(null);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         card1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        card1.setPreferredSize(new java.awt.Dimension(320, 220));
+        card1.setMaximumSize(null);
         card1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        cardGraphic1.setMaximumSize(new java.awt.Dimension(160, 220));
-        cardGraphic1.setMinimumSize(new java.awt.Dimension(160, 220));
-        cardGraphic1.setPreferredSize(new java.awt.Dimension(160, 220));
-        card1.add(cardGraphic1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 160, 220));
+        cardGraphic1.setMaximumSize(null);
+        cardGraphic1.setMinimumSize(null);
+        cardGraphic1.setPreferredSize(null);
+        card1.add(cardGraphic1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 161, 220));
 
-        cardGraphic2.setMaximumSize(new java.awt.Dimension(160, 220));
-        cardGraphic2.setMinimumSize(new java.awt.Dimension(160, 220));
-        cardGraphic2.setPreferredSize(new java.awt.Dimension(160, 220));
-        card1.add(cardGraphic2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 160, 220));
+        cardGraphic2.setMaximumSize(null);
+        cardGraphic2.setMinimumSize(null);
+        cardGraphic2.setPreferredSize(null);
+        card1.add(cardGraphic2, new org.netbeans.lib.awtextra.AbsoluteConstraints(161, 0, 161, 220));
 
-        add(card1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 320, 220));
+        add(card1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 323, 220));
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel card1;
