@@ -3,20 +3,21 @@
  * and open the template in the editor.
  */
 package pokerbot;
+
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import evaluador.Hand;
 import evaluador.HandEvaluator;
-import evaluador.Probabilidad;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.BitSet;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -26,9 +27,10 @@ import javax.swing.JOptionPane;
  * @author Julio
  */
 public class Game extends javax.swing.JFrame {
-    
+
     Jugador j1;
     Jugador j2;
+    Jugador actual;
     int gameControl;
     int apuesta;
     boolean ciega;
@@ -36,78 +38,76 @@ public class Game extends javax.swing.JFrame {
     BufferedImage deck, back;
     Carta[] juego;
     BitSet b;
-    private String c1,c2,mesa;
-    private void gameToHand(){
+    private String c1, c2, mesa;
+
+    private void gameToHand() {
         //c1;
-        c1 = juego[0].toCard().toString()+" "+juego[1].toCard().toString();
-        c2 = juego[2].toCard().toString()+" "+juego[3].toCard().toString();
-        mesa="";
-        for(int i=4;i<9;i++)
-            mesa+=juego[i].toCard().toString()+" ";
+        c1 = juego[0].toCard().toString() + " " + juego[1].toCard().toString();
+        c2 = juego[2].toCard().toString() + " " + juego[3].toCard().toString();
+        mesa = "";
+        for (int i = 4; i < 9; i++) {
+            mesa += juego[i].toCard().toString() + " ";
+        }
     }
-    void decidirGanador(){
+
+    public void mensaje(String m) {
+        JOptionPane.showMessageDialog(this, m);
+    }
+
+    void decidirGanador() {
         gameToHand();
-        Hand h1,h2;
-        h1 = new Hand(mesa+c1);
-        h2 = new Hand(mesa+c2);
-        int a,b;
+        Hand h1, h2;
+        h1 = new Hand(mesa + c1);
+        h2 = new Hand(mesa + c2);
+        int a, b;
         a = HandEvaluator.rankHand(h1);
         b = HandEvaluator.rankHand(h2);
-        String n1,n2;
+        String n1, n2;
         n1 = HandEvaluator.nameHand(h1);
         n2 = HandEvaluator.nameHand(h2);
-        if(a>b){
-            if(n1.equalsIgnoreCase(n2))
-                n1+= " con carta Alta";
-            JOptionPane.showMessageDialog(this, "Gano Player 1\n"+n1);
-        }else if(a<b){
-             if(n1.equalsIgnoreCase(n2))
-                n2+= " con carta Alta";
-            JOptionPane.showMessageDialog(this, "Gano Player 2\n"+n2);
-        }else{
-            JOptionPane.showMessageDialog(this, "Empate\nPlayer 1: "+n1+"\nPlayer 2: "+n2);
+        if (a > b) {
+            if (n1.equalsIgnoreCase(n2)) {
+                n1 += " con carta Alta";
+            }
+            JOptionPane.showMessageDialog(this, "Gano Player 1\n" + n1);
+            j1.ganaApuesta();
+        } else if (a < b) {
+            if (n1.equalsIgnoreCase(n2)) {
+                n2 += " con carta Alta";
+            }
+            JOptionPane.showMessageDialog(this, "Gano Player 2\n" + n2);
+            j2.ganaApuesta();
+        } else {
+            JOptionPane.showMessageDialog(this, "Empate\nPlayer 1: " + n1 + "\nPlayer 2: " + n2);
+            int mitad = getPozo() / 2;
+            j1.dinero += mitad;
+            j2.dinero += mitad;
+            jtPozo.setText("0");
         }
-        
+
     }
+
     void log(String newLine) {
         String actual = jTextArea1.getText();
         jTextArea1.setText(actual + newLine + "\n");
     }
-
-   
-//    public void pasar() {
-//        log("Pasar.");
-//        j1.apostar(playerStatus1.getApuesta());
-//        apuesta = playerStatus1.getApuesta();
-//        playerStatus1.setDinero(j1.getDinero());
-//        playerStatus1.setApuesta(0);;
-//        playerStatus1.setObligada(0);
-//        playerStatus2.setApuesta(apuesta);
-//        turno=!turno;
-//        playerStatus1.setVisibleButton(turno);
-//        if(!ciega)
-//                gameControl++;
-//        GameControl(gameControl);
-//    }
-
-    public void retirarse() {
-        log("Retirarse.");
-        j1.apostar(playerStatus1.getObligada());
-        
-        j2.ganaApuesta();
-        nuevoJuego(j1, j2);
+    public void focusJugar(){
+        jugar.requestFocus();
     }
-
     void GameControl() {
-        if(j1.status.getApuesta()==0 && j2.status.getApuesta()==0 && turno==!ciega)
+        if (j1.status.getApuesta() == 0 && j2.status.getApuesta() == 0 && turno == !ciega) {
             gameControl++;
-        log("GameControl "+gameControl+" Turno "+turno);
-        
-        mostrarCartas(gameControl);
-        j1.turno(turno);
-        j2.turno(!turno);
-        if(gameControl==4)nuevaRonda();
-        
+            mostrarCartas(gameControl);
+            this.repaint();
+        }
+        if (gameControl == 4) {
+            decidirGanador();
+            nuevaRonda();
+        } else {
+            j1.turno(turno);
+            j2.turno(!turno);
+        }
+        focusJugar();
     }
 
     void setObligada() {
@@ -122,37 +122,46 @@ public class Game extends javax.swing.JFrame {
         j1.Actualizar(null, null, 100, a, null);
         j2.Actualizar(null, null, 100, c, null);
     }
-    public Integer getPozo(){
+
+    public Integer getPozo() {
         return Integer.parseInt(jtPozo.getText());
     }
-    public void pozo(Integer i){
+
+    public void pozo(Integer i) {
         jtPozo.setText(i.toString());
     }
-    public void spozo(Integer i){
+
+    public void spozo(Integer i) {
         Integer x = Integer.parseInt(jtPozo.getText());
-        jtPozo.setText(new Integer(x+i).toString());
+        jtPozo.setText(new Integer(x + i).toString());
     }
-    
-    void nuevaRonda(){
+
+    void nuevaRonda() {
         log("*** NUEVA RONDA ***");
         setObligada();
+        if(ciega){
+            actual = j1;
+        }else{
+            actual = j2;
+        }
         turno = ciega;
         ciega = !ciega;
-        
+
         gameControl = 0;
         iniciarMesa();
         b = new BitSet(52);
         b.set(0, 51, false);
         Repartir();
+        mostrarCartas(0);
         GameControl();
     }
+
     void nuevoJuego(Jugador j1, Jugador j2) {
         log("Juego Nuevo.");
         pozo(0);
         ciega = true;
         this.j1 = j1;
         this.j2 = j2;
-        turno = ciega;
         nuevaRonda();
     }
 
@@ -180,7 +189,6 @@ public class Game extends javax.swing.JFrame {
         switch (i) {
             case 4:
                 cargarPlayer2(juego[2], juego[3]);
-                decidirGanador();
             case 3:
                 c5 = juego[8];
             case 2:
@@ -192,7 +200,6 @@ public class Game extends javax.swing.JFrame {
                 cargarMesa(c1, c2, c3, c4, c5);
             case 0:
                 cargarPlayer1(juego[0], juego[1]);
-
         }
     }
 
@@ -209,7 +216,10 @@ public class Game extends javax.swing.JFrame {
         } catch (IOException e) {
         }
         initComponents();
-        nuevoJuego(new Humano(this,1000,0), new Humano(this,1000,1));
+        nuevoJuego(new Humano(this,1000,0), new AI(this,1000,1));
+        playerStatus1.parent(this);
+        playerStatus2.parent(this);
+
         log("Interfaz cargada.");
     }
 
@@ -246,6 +256,7 @@ public class Game extends javax.swing.JFrame {
         jtPozo = new javax.swing.JTextField();
         jToggleButton1 = new javax.swing.JToggleButton();
         jButton1 = new javax.swing.JButton();
+        jugar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -253,6 +264,11 @@ public class Game extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Texas Hold'em!!");
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                formKeyReleased(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(table1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, -1, -1));
         getContentPane().add(playerGraphics1, new org.netbeans.lib.awtextra.AbsoluteConstraints(478, 0, 322, -1));
@@ -295,6 +311,19 @@ public class Game extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 0, -1, 30));
 
+        jugar.setText("Jugar");
+        jugar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jugarActionPerformed(evt);
+            }
+        });
+        jugar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jugarKeyReleased(evt);
+            }
+        });
+        getContentPane().add(jugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, -1, -1));
+
         jMenu1.setText("Juego");
 
         jMenuItem1.setText("Nuevo Juego");
@@ -321,37 +350,65 @@ public class Game extends javax.swing.JFrame {
         Object[] Opciones = {"Jugador vs AI", "AI vs AI"};
         accion = JOptionPane.showOptionDialog(null, "Elija el modo de juego", "Juego Nuevo", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, Opciones, null);
         if (accion == 0) {
-            nuevoJuego(new Humano(this, 1000,0), new AI(this, 1000, 1));
+            nuevoJuego(new Humano(this, 1000, 0), new AI(this, 1000, 1));
         } else {
-            nuevoJuego(new AI(this, 1000,0), new AI(this, 1000, 1));
+            nuevoJuego(new AI(this, 1000, 0), new AI(this, 1000, 1));
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-    public boolean mostrarProbabilidad(){
+    public boolean mostrarProbabilidad() {
         return jToggleButton1.isSelected();
     }
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // TODO add your handling code here:
-        if(jToggleButton1.isSelected())
+        if (jToggleButton1.isSelected()) {
             cargarPlayer2(juego[2], juego[3]);
-        else
-            cargarPlayer2(new Carta(-1,0), new Carta(-1,0));
+        } else {
+            cargarPlayer2(new Carta(-1, 0), new Carta(-1, 0));
+        }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         jTextArea1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
-    public String getVisibleMesaString(){
+
+    private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_formKeyReleased
+
+    private void jugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jugarActionPerformed
+        // TODO add your handling code here:
+        Jugador aux;
+        log("KeyPressed");
+        if(actual!=null){
+                aux = actual;
+                actual = null;
+                aux.siguienteAccion();
+        }
+    }//GEN-LAST:event_jugarActionPerformed
+
+    private void jugarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jugarKeyReleased
+        // TODO add your handling code here:
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            jugarActionPerformed(null);
+        }
+    }//GEN-LAST:event_jugarKeyReleased
+    public String getVisibleMesaString() {
         String cards = "";
-        switch(gameControl){
-            case 3: cards+=juego[8].toCard().toString()+" ";
-            case 2: cards+=juego[7].toCard().toString()+" ";
-            case 1: cards+=juego[4].toCard().toString()+" ";
-                    cards+=juego[5].toCard().toString()+" ";
-                    cards+=juego[6].toCard().toString()+" ";
+        switch (gameControl) {
+            case 3:
+                cards += juego[8].toCard().toString() + " ";
+            case 2:
+                cards += juego[7].toCard().toString() + " ";
+            case 1:
+                cards += juego[4].toCard().toString() + " ";
+                cards += juego[5].toCard().toString() + " ";
+                cards += juego[6].toCard().toString() + " ";
         }
         return cards;
     }
+
     /**
      * @param args the command line arguments
      */
@@ -382,7 +439,7 @@ public class Game extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        
+
         try {
 //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 //                System.out.println(info.getName());
@@ -400,6 +457,7 @@ public class Game extends javax.swing.JFrame {
         //</editor-fold>
         Game _this = new Game();
         _this.setVisible(true);
+
     }
 
     ImageIcon ObtenerImagen(Carta c) {
@@ -441,6 +499,7 @@ public class Game extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JTextField jtPozo;
+    private javax.swing.JButton jugar;
     private pokerbot.PlayerGraphics playerGraphics1;
     private pokerbot.PlayerGraphics playerGraphics2;
     private pokerbot.PlayerStatus playerStatus1;

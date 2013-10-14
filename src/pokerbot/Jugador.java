@@ -25,7 +25,7 @@ public abstract class Jugador {
     protected Game parent;
     protected PlayerStatus status;
     public int getMaximaApuesta(){
-        return Math.min(parent.j1.status.getDinero(),parent.j2.status.getDinero());
+        return Math.min(Math.min(parent.j1.status.getDinero(),parent.j2.status.getDinero()),200);
     }
     public PlayerStatus getOtherStatus(){
         if(pNumber==0)
@@ -41,6 +41,7 @@ public abstract class Jugador {
      * @param border 
      */
     public void turno(boolean t){
+        
         double p;
         if(t){
             long inicio, fin;
@@ -50,7 +51,8 @@ public abstract class Jugador {
             parent.log("Tiempo: "+(fin-inicio)+" ms");
             status.setProbabilidad(p);
             parent.log(""+p);
-            siguienteAccion();
+            parent.actual = this;
+            //siguienteAccion();
         }
     }
     public double obtenerProbabilidad(){//Falta implementar.
@@ -137,21 +139,21 @@ public abstract class Jugador {
     }
     //@Override
     public void igualar() {
-        int apuesta = parent.apuesta;
-        parent.log("Apuesta "+apuesta);
-        if(apuesta==0){
-            apuesta = status.getApuesta();
-            parent.apuesta = apuesta;
-        }
-        if(apuesta!=0){
-            apostar(apuesta);
-            if(getOtherStatus().getObligada()!=0)
-                getOtherStatus().setApuesta(apuesta);
-            else
-                parent.apuesta=0;
-            Actualizar(dinero, null, 0, 0, null);
-        }
+        int apuesta = status.getApuesta();
         
+        apostar(apuesta);
+        parent.log("Apuesta: "+apuesta+" Dinero: "+getDinero());
+        status.setApuesta(0);
+        if(apuesta!=0){
+            if(parent.apuesta==0){
+                parent.apuesta = apuesta;
+                getOtherStatus().setApuesta(apuesta);
+            }else{
+                parent.apuesta = 0;
+                getOtherStatus().setApuesta(0);
+            }
+        }
+        status.setObligada(0);
         parent.turno = !parent.turno;
         parent.GameControl();
         
@@ -170,7 +172,7 @@ public abstract class Jugador {
     public void ganaApuesta() {
         parent.log("Gana Apuesta = "+dinero);
         dinero += parent.getPozo();
-        parent.log("Pozo = 0");
+        status.setDinero(dinero);
         parent.pozo(0);
     }
 
@@ -180,7 +182,9 @@ public abstract class Jugador {
         assert (cantidad <= dinero);
         parent.log("Player "+pNumber+" aposto "+cantidad);
         parent.spozo(cantidad);
-        dinero -= cantidad;
+        status.setDinero(status.getDinero()-cantidad);
+        parent.log("Dinero luego de apostar: "+dinero);
+        dinero = status.getDinero();
     }
 
     public abstract int siguienteAccion();

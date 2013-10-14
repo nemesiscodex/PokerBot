@@ -1225,10 +1225,10 @@ public class HandEvaluator {
          t = "Poker de " + rank_name[ident / NUM_RANKS] + "s";
          break;
       case STRAIGHT:
-         t = "Escalera al" + rank_name[ident];
+         t = "Escalera al " + rank_name[ident];
          break;
       case STRAIGHTFLUSH:
-         t = "Escalera de color al" + rank_name[ident];
+         t = "Escalera de color al " + rank_name[ident];
          break;
       case FIVEKIND:
          t = "Escalera Real, " + rank_name[ident] + "s";

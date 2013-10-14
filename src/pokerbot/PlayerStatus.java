@@ -16,9 +16,12 @@ import javax.swing.JTextField;
  * @author Julio
  */
 public class PlayerStatus extends javax.swing.JPanel {
+    private Game _parent;
     private String Name;
     private boolean visible;
-
+    public void parent(Game g){
+        _parent = g;
+    }
     public JTextField getJtDinero() {
         return jtDinero;
     }
@@ -77,7 +80,6 @@ public class PlayerStatus extends javax.swing.JPanel {
         subirPlayer = new javax.swing.JPanel();
         jSlider1 = new javax.swing.JSlider();
         jbApostar = new javax.swing.JButton();
-        jbAllIn = new javax.swing.JButton();
         jbCancelar = new javax.swing.JButton();
         jtSubir = new javax.swing.JTextField();
         panelIA = new javax.swing.JPanel();
@@ -175,13 +177,6 @@ public class PlayerStatus extends javax.swing.JPanel {
             }
         });
 
-        jbAllIn.setText("All in");
-        jbAllIn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbAllInActionPerformed(evt);
-            }
-        });
-
         jbCancelar.setText("Cancelar");
         jbCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,12 +196,10 @@ public class PlayerStatus extends javax.swing.JPanel {
                     .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(subirPlayerLayout.createSequentialGroup()
                         .addComponent(jbApostar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbAllIn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(67, 67, 67)
                         .addComponent(jbCancelar)
                         .addGap(18, 18, 18)
-                        .addComponent(jtSubir)))
+                        .addComponent(jtSubir, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         subirPlayerLayout.setVerticalGroup(
@@ -216,7 +209,6 @@ public class PlayerStatus extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subirPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbApostar)
-                    .addComponent(jbAllIn)
                     .addComponent(jbCancelar)
                     .addComponent(jtSubir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -224,22 +216,20 @@ public class PlayerStatus extends javax.swing.JPanel {
 
         panelIA.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("X");
+        jLabel5.setText("x");
 
-        jtX.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtX.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtXActionPerformed(evt);
             }
         });
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("q");
 
-        jtQ.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtQ.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtQActionPerformed(evt);
@@ -262,9 +252,8 @@ public class PlayerStatus extends javax.swing.JPanel {
         panelIALayout.setVerticalGroup(
             panelIALayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelIALayout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(5, 5, 5)
                 .addComponent(jtX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
@@ -309,7 +298,7 @@ public class PlayerStatus extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -328,12 +317,11 @@ public class PlayerStatus extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
                                     .addComponent(jtApuesta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(accionPlayer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelIA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(subirPlayer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(subirPlayer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -353,7 +341,7 @@ public class PlayerStatus extends javax.swing.JPanel {
         // TODO add your handling code here:
         visible = true;
         jSlider1.setMinimum(new Integer(jtObligada.getText()));
-        jSlider1.setMaximum(new Integer(jtDinero.getText()));
+        jSlider1.setMaximum(Math.min(_parent.j1.getMaximaApuesta(),_parent.j2.getMaximaApuesta()));
         jSlider1.setValue(0);
         setVisibleSubir();
     }//GEN-LAST:event_jbtnSubirActionPerformed
@@ -362,11 +350,6 @@ public class PlayerStatus extends javax.swing.JPanel {
         // TODO add your handling code here:
         jtSubir.setText(new Integer(jSlider1.getValue()).toString());
     }//GEN-LAST:event_jSlider1StateChanged
-
-    private void jbAllInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAllInActionPerformed
-        // TODO add your handling code here:
-        jSlider1.setValue(jSlider1.getMaximum());
-    }//GEN-LAST:event_jbAllInActionPerformed
 
     private void jbCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCancelarActionPerformed
         // TODO add your handling code here:
@@ -394,7 +377,6 @@ public class PlayerStatus extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JSlider jSlider1;
-    private javax.swing.JButton jbAllIn;
     private javax.swing.JButton jbApostar;
     private javax.swing.JButton jbCancelar;
     private javax.swing.JButton jbtnPasar;
