@@ -176,7 +176,7 @@ public abstract class Jugador {
         parent.pozo(0);
     }
 
-    public abstract int optenerApuesta();
+    public abstract int obtenerApuesta();
 
     public void apostar(int cantidad) {
         assert (cantidad <= dinero);

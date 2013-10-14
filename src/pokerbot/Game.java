@@ -100,9 +100,19 @@ public class Game extends javax.swing.JFrame {
             mostrarCartas(gameControl);
             this.repaint();
         }
+        
+        if((j1.status.getDinero()==0 || j2.status.getDinero()==0) && j1.status.getApuesta() == 0 && j2.status.getApuesta() == 0){
+            gameControl=4;
+            mostrarCartas(gameControl);
+        }
         if (gameControl == 4) {
             decidirGanador();
-            nuevaRonda();
+            if(j1.status.getDinero()==0 || j2.status.getDinero()==0){
+                mensaje("Termino el Juego.");
+                jMenuItem1ActionPerformed(null);
+            }else{
+                nuevaRonda();
+            }
         } else {
             j1.turno(turno);
             j2.turno(!turno);
@@ -199,6 +209,8 @@ public class Game extends javax.swing.JFrame {
                 c3 = juego[6];
                 cargarMesa(c1, c2, c3, c4, c5);
             case 0:
+                if(jToggleButton1.isSelected())
+                    cargarPlayer2(juego[2], juego[3]);
                 cargarPlayer1(juego[0], juego[1]);
         }
     }

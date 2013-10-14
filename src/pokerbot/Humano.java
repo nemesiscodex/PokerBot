@@ -24,12 +24,12 @@ public class Humano extends Jugador{
     }
 
     @Override
-    public int optenerApuesta() {
+    public int obtenerApuesta() {
         int ret;
         try{
             ret =Integer.parseInt((String)JOptionPane.showInputDialog("Cantidad"));
         }catch(NumberFormatException e){
-            ret = optenerApuesta();
+            ret = obtenerApuesta();
         }
         if(getMaximaApuesta()<ret){
             ret = getMaximaApuesta();

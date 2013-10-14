@@ -346,6 +346,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jtX">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=".25"/>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtXActionPerformed"/>
           </Events>
@@ -360,6 +363,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jtQ">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=".75"/>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtQActionPerformed"/>
           </Events>

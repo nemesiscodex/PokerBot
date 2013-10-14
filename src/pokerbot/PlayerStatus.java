@@ -59,7 +59,7 @@ public class PlayerStatus extends javax.swing.JPanel {
         return jtX.getText();
     }
     public String getJtQ(){
-        return jtX.getText();
+        return jtQ.getText();
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -220,6 +220,7 @@ public class PlayerStatus extends javax.swing.JPanel {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("x");
 
+        jtX.setText(".25");
         jtX.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtXActionPerformed(evt);
@@ -230,6 +231,7 @@ public class PlayerStatus extends javax.swing.JPanel {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("q");
 
+        jtQ.setText(".75");
         jtQ.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtQActionPerformed(evt);
