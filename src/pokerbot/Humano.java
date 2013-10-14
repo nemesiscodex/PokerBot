@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 public class Humano extends Jugador{
     @Override
     public int siguienteAccion() {
-        parent.log("**Turno Player "+pNumber+"**");
+        parent.log("**Turno Player "+(pNumber+1)+"**");
         return -1;
     }
 

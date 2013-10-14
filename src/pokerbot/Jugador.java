@@ -171,13 +171,12 @@ public abstract class Jugador {
     }
     public abstract void subir(int i);
        // @Override
-    public void retirarse() {
-        //JOptionPane.showMessageDialog(parent, "El Jugador "+pNumber+" se ha retirado.", "Fin de la ronda.", JOptionPane.INFORMATION_MESSAGE);
-        apostar(status.getObligada());
+    public void retirarse() {apostar(status.getObligada());
         if(pNumber==0)
             parent.j2.ganaApuesta();
         else
             parent.j1.ganaApuesta();
+        parent.mensaje("Player "+(pNumber+1)+" se retira.");
         parent.nuevaRonda();
     }
     public void ganaApuesta() {

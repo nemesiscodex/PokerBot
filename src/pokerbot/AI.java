@@ -35,7 +35,7 @@ public class AI extends Jugador {
 
     @Override
     public int siguienteAccion() {
-        parent.log("**Turno Player " + pNumber + "**");
+        parent.log("**Turno Player " + (pNumber+1) + "**");
 
         if (parent.gameControl == 0) {
             try {
@@ -71,7 +71,7 @@ public class AI extends Jugador {
     public void apostar(int cantidad) {
         assert (cantidad <= dinero);
         acumulado+=cantidad;
-        parent.log("Player "+pNumber+" aposto "+cantidad);
+        parent.log("Player "+(pNumber+1)+" aposto "+cantidad);
         parent.spozo(cantidad);
         status.setDinero(status.getDinero()-cantidad);
         parent.log("Dinero luego de apostar: "+dinero);
@@ -114,7 +114,7 @@ public class AI extends Jugador {
         String jugada = "";
         parent.log("p: " + p + " x: " + x);
         if (p < x - .1) {
-            if (status.getApuesta() == 0) {
+            if (status.getApuesta() == 0 || status.getObligada()==100) {
                 igualar();
                 jugada = "Pasa.";
             } else {

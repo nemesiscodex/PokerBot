@@ -19,6 +19,10 @@ public class PlayerStatus extends javax.swing.JPanel {
     private Game _parent;
     private String Name;
     private boolean visible;
+    public void ocultarProbabilidad(boolean val){
+        jtProbabilidad.setVisible(val);
+        jLabel1.setVisible(val);
+    }
     public void parent(Game g){
         _parent = g;
     }
@@ -342,7 +346,7 @@ public class PlayerStatus extends javax.swing.JPanel {
     private void jbtnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSubirActionPerformed
         // TODO add your handling code here:
         visible = true;
-        jSlider1.setMinimum(new Integer(jtObligada.getText()));
+        jSlider1.setMinimum(Math.max(new Integer(jtObligada.getText()),_parent.apuesta));
         jSlider1.setMaximum(Math.min(_parent.j1.getMaximaApuesta(),_parent.j2.getMaximaApuesta()));
         jSlider1.setValue(0);
         setVisibleSubir();
@@ -442,6 +446,7 @@ public class PlayerStatus extends javax.swing.JPanel {
 
     public double getProbabilidad(){
         String s = jtProbabilidad.getText();
+        System.out.println(s+">>>>");
         return Double.parseDouble(s.substring(0, s.length()-1));
     }
     

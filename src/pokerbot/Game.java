@@ -424,6 +424,8 @@ public class Game extends javax.swing.JFrame {
     private void hideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideActionPerformed
         // TODO add your handling code here:
         log = !hide.isSelected();
+        playerStatus1.ocultarProbabilidad(log);
+        playerStatus2.ocultarProbabilidad(log);
     }//GEN-LAST:event_hideActionPerformed
     public String getVisibleMesaString() {
         String cards = "";

@@ -54,7 +54,7 @@ public class Probabilidad {
             set.add(deck.getCard(i));
         }
 
-        System.out.println("Calculando probabilidad en el flop...");
+        System.out.println("Calulo probabilidad del flop.");
 
         //generar todas las combinaciones de 47 tomadas de a 4
         CombinationGenerator<Card> cg = new CombinationGenerator<Card>(set, 4);
@@ -116,7 +116,7 @@ public class Probabilidad {
             set.add(deck.getCard(i));
         }
 
-        System.out.println("Calculando probabilidad en el turn...");
+        System.out.println("Calulo probabilidad del turn.");
 
         //generar todas las combinaciones de 46 tomadas de a 3
         CombinationGenerator<Card> cg = new CombinationGenerator<Card>(set, 3);
@@ -174,7 +174,7 @@ public class Probabilidad {
             set.add(deck.getCard(i));
         }
 
-        System.out.println("Calculando probabilidad en el river...");
+        System.out.println("Calulo probabilidad del river.");
 
         //generar todas las combinaciones de 45 tomadas de a 2
         CombinationGenerator<Card> cg = new CombinationGenerator<Card>(set, 2);
@@ -221,50 +221,29 @@ public class Probabilidad {
         int palo1;
         int palo2;
         float prob;
-        System.out.println("##########");
-        System.out.println(mano.toString());
-        System.out.println("##########");
+        System.out.println("Calulo probabilidad del pre-flop.");
         carta1= mano.getCardIndex(1);
         carta2= mano.getCardIndex(2);
         palo1= (int)(carta1/13);
         palo2= (int)(carta2/13);
+        
         if(carta1%13 == carta2%13){
             prob= (float) (paresPreFlop[carta1%13]/100.0);
-            System.out.println("##########");
-            System.out.println("cartas pares: "+ carta1%13 + " // " + carta2%13);
-            System.out.println("probabilidad: "+ prob);
-            System.out.println("##########");
             return prob ;
         }else if(palo1 == palo2 ){
             if((int)(carta1%13) > (int)(carta2%13)){
                 prob= (float)(mismoPaloPreFlop[carta1%13][carta2%13]/100.0);
-                System.out.println("##########");
-                System.out.println("cartas mismo palo: "+ carta1%13 + " // " + carta2%13);
-                System.out.println("probabilidad: "+ prob);
-                System.out.println("##########");
                 return prob;
             }
             prob= (float)(mismoPaloPreFlop[carta2%13][carta1%13]/100.0);
-            System.out.println("##########");
-            System.out.println("cartas mismo palo: "+ carta2%13 + " // " + carta1%13);
-            System.out.println("probabilidad: "+ prob);
-            System.out.println("##########");
             return prob;
 
         }else{
             if((int)(carta1%13) > (int)(carta2%13)){
                 prob= (float)(distintoPaloPreFlop[carta1%13][carta2%13]/100.0);
-                System.out.println("##########");
-                System.out.println("cartas distinto palo: "+ carta1%13 + " // " + carta2%13);
-                System.out.println("probabilidad: "+ prob);
-                System.out.println("##########");
                 return prob;
             }
             prob= (float)(distintoPaloPreFlop[carta2%13][carta1%13]/100.0);
-            System.out.println("##########");
-            System.out.println("cartas distinto palo: "+ carta2%13 + " // " + carta1%13);
-            System.out.println("probabilidad: "+ prob);
-            System.out.println("##########");
             return prob;
         }
 
