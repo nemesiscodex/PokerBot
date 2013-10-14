@@ -162,6 +162,8 @@ public class Game extends javax.swing.JFrame {
         ciega = !ciega;
         max = 200;
         gameControl = 0;
+        j1.Actualizar(1000, 0.0, 100, null, null);
+        j2.Actualizar(1000, 0.0, 100, null, null);
         iniciarMesa();
         b = new BitSet(52);
         b.set(0, 51, false);

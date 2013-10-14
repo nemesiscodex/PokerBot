@@ -63,7 +63,15 @@ public abstract class Jugador {
             case 0:
                 return Probabilidad.getProbabilidadAntesDelFlop(mano);
             case 3:
+                com = new Deck();
+                mano = new Hand(mano.toString()+" "+parent.getVisibleMesaString());
+                com.extractHand(mano);
+                return Probabilidad.getProbabilidadRiver(mano, new Hand(parent.getVisibleMesaString()), com);
             case 2:
+                com = new Deck();
+                mano = new Hand(mano.toString()+" "+parent.getVisibleMesaString());
+                com.extractHand(mano);
+                return Probabilidad.getProbabilidadTurn(mano, new Hand(parent.getVisibleMesaString()), com);
             case 1:
                 com = new Deck();
                 mano = new Hand(mano.toString()+" "+parent.getVisibleMesaString());
