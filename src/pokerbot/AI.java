@@ -84,6 +84,7 @@ public class AI extends Jugador {
 
     @Override
     public void subir(int i) {
+        //parent.apuesta = i - parent.apuesta;
         status.setApuesta(i);
     }
 
@@ -93,15 +94,16 @@ public class AI extends Jugador {
             estrategiaProbabilistica();
         if(acumulado+status.getApuesta()<=600){//limite es 800, 600 es el 75% del limite
             apuesta = getMaximaApuesta();
+//            if(status.getApuesta() == 0)
+//                parent.mensaje("Player " + (pNumber + 1) + " Pasa.");
+//            else
+//                parent.mensaje("Player " + (pNumber + 1) + " Apuesta "+ apuesta);
             subir(apuesta);
             igualar();
-            if(status.getApuesta() == 0)
-                parent.mensaje("Player " + (pNumber + 1) + " Pasa.");
-            else
-                parent.mensaje("Player " + (pNumber + 1) + " Apuesta "+ apuesta);
+            
         }else if(status.getApuesta()==0){
             igualar();
-            parent.mensaje("Player " + (pNumber + 1) + " Pasa.");
+//            parent.mensaje("Player " + (pNumber + 1) + " Pasa.");
         }else{
             estrategiaProbabilistica();
         }
@@ -112,7 +114,6 @@ public class AI extends Jugador {
         String jugada = "";
         parent.log("p: " + p + " x: " + x);
         if (p < x - .1) {
-            parent.log("PRIMERA");
             if (status.getApuesta() == 0) {
                 igualar();
                 jugada = "Pasa.";
@@ -121,7 +122,6 @@ public class AI extends Jugador {
                 jugada = "Se retira.";
             }
         } else if (p <= x + .2) {
-            parent.log("SEGUNDA");
             igualar();
             if (status.getApuesta() == 0) {
                 jugada = "Pasa.";
@@ -129,17 +129,15 @@ public class AI extends Jugador {
                 jugada = "Iguala.";
             }
         } else {
-            parent.log("TERCERA");
             int cant = 0;
-            double inc = (1 - x) / 4;
+            double inc = (1 - x) / 2;
             if (p < x + inc) {
                 cant = 100;
-            } else if (p < x + 2 * inc) {
-                cant = 150;
-            } else {
+            } else{
                 cant = 200;
             }
             cant = Math.min(cant, getMaximaApuesta());
+            cant = Math.max(cant, parent.apuesta);
             if (cant == status.getApuesta()) {
                 jugada = "Iguala.";
             } else {
@@ -149,7 +147,7 @@ public class AI extends Jugador {
             igualar();
         }
         if (parent.turno == parent.ciega || parent.gameControl != 0) {
-            parent.mensaje("Player " + (pNumber + 1) + " " + jugada);
+            //parent.mensaje("Player " + (pNumber + 1) + " " + jugada);
         }
     }
 }

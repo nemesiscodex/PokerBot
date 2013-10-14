@@ -25,7 +25,7 @@ public abstract class Jugador {
     protected Game parent;
     protected PlayerStatus status;
     public int getMaximaApuesta(){
-        return Math.min(Math.min(parent.j1.status.getDinero(),parent.j2.status.getDinero()),200);
+        return Math.abs(Math.min(Math.min(parent.j1.status.getDinero(),parent.j2.status.getDinero()),parent.max));
     }
     public PlayerStatus getOtherStatus(){
         if(pNumber==0)
@@ -48,9 +48,9 @@ public abstract class Jugador {
             inicio = System.currentTimeMillis();
             p = obtenerProbabilidad();
             fin = System.currentTimeMillis();
-            parent.log("Tiempo: "+(fin-inicio)+" ms");
+            parent.log("Tiempo: "+(fin-inicio)+" ms.  Probabilidad: "+p);
             status.setProbabilidad(p);
-            parent.log(""+p);
+            //parent.log(""+p);
             parent.actual = this;
             //siguienteAccion();
         }
@@ -68,8 +68,6 @@ public abstract class Jugador {
                 com = new Deck();
                 mano = new Hand(mano.toString()+" "+parent.getVisibleMesaString());
                 com.extractHand(mano);
-                parent.log("Comunitarias "+parent.getVisibleMesaString());
-                parent.log("Hand "+mano.toString());
                 return Probabilidad.getProbabilidadFlop(mano, new Hand(parent.getVisibleMesaString()), com);
             
                 
@@ -140,19 +138,32 @@ public abstract class Jugador {
     //@Override
     public void igualar() {
         int apuesta = status.getApuesta();
-        
         apostar(apuesta);
         parent.log("Apuesta: "+apuesta+" Dinero: "+getDinero());
         status.setApuesta(0);
+        parent.log("Parent.apuesta: "+parent.apuesta);
         if(apuesta!=0){
             if(parent.apuesta==0){
                 parent.apuesta = apuesta;
                 getOtherStatus().setApuesta(apuesta);
+                parent.mensaje("Player "+(pNumber+1)+" Apuesta "+apuesta);
             }else{
-                parent.apuesta = 0;
-                getOtherStatus().setApuesta(0);
+                parent.max = parent.max - parent.apuesta;
+                parent.apuesta = apuesta - parent.apuesta;
+                //parent.max = parent.max - parent.apuesta;
+                parent.log("Max cambio a "+parent.max);
+                getOtherStatus().setApuesta(parent.apuesta);
+                if(parent.apuesta==0){
+                    parent.mensaje("Player "+(pNumber+1)+" Iguala.");
+                }else{
+                    parent.mensaje("Player "+(pNumber+1)+" Sube "+parent.apuesta);
+                }
             }
+            parent.log("Parent.apuesta: "+parent.apuesta);
+        }else{
+            parent.mensaje("Player "+(pNumber+1)+" Pasa.");
         }
+        
         status.setObligada(0);
         parent.turno = !parent.turno;
         parent.GameControl();
@@ -161,7 +172,7 @@ public abstract class Jugador {
     public abstract void subir(int i);
        // @Override
     public void retirarse() {
-        JOptionPane.showMessageDialog(parent, "El Jugador "+pNumber+" se ha retirado.", "Fin de la ronda.", JOptionPane.INFORMATION_MESSAGE);
+        //JOptionPane.showMessageDialog(parent, "El Jugador "+pNumber+" se ha retirado.", "Fin de la ronda.", JOptionPane.INFORMATION_MESSAGE);
         apostar(status.getObligada());
         if(pNumber==0)
             parent.j2.ganaApuesta();
@@ -180,7 +191,7 @@ public abstract class Jugador {
 
     public void apostar(int cantidad) {
         assert (cantidad <= dinero);
-        parent.log("Player "+pNumber+" aposto "+cantidad);
+        parent.log("Player "+(pNumber+1)+" aposto "+cantidad);
         parent.spozo(cantidad);
         status.setDinero(status.getDinero()-cantidad);
         parent.log("Dinero luego de apostar: "+dinero);

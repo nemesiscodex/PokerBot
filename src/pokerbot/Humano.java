@@ -49,7 +49,7 @@ public class Humano extends Jugador{
 
     @Override
     public void subir(int subir) {
-        
+        parent.log("Apuesta actual: "+parent.apuesta);
     }
 
 

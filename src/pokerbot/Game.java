@@ -27,7 +27,8 @@ import javax.swing.JOptionPane;
  * @author Julio
  */
 public class Game extends javax.swing.JFrame {
-
+    private boolean log;
+    int max;
     Jugador j1;
     Jugador j2;
     Jugador actual;
@@ -89,7 +90,8 @@ public class Game extends javax.swing.JFrame {
 
     void log(String newLine) {
         String actual = jTextArea1.getText();
-        jTextArea1.setText(actual + newLine + "\n");
+        if(log)
+            jTextArea1.setText(actual + newLine + "\n");
     }
     public void focusJugar(){
         jugar.requestFocus();
@@ -97,6 +99,8 @@ public class Game extends javax.swing.JFrame {
     void GameControl() {
         if (j1.status.getApuesta() == 0 && j2.status.getApuesta() == 0 && turno == !ciega) {
             gameControl++;
+            apuesta=0;
+            max = 200;
             mostrarCartas(gameControl);
             this.repaint();
         }
@@ -156,7 +160,7 @@ public class Game extends javax.swing.JFrame {
         }
         turno = ciega;
         ciega = !ciega;
-
+        max = 200;
         gameControl = 0;
         iniciarMesa();
         b = new BitSet(52);
@@ -222,6 +226,7 @@ public class Game extends javax.swing.JFrame {
     }
 
     public Game() {
+        log = true;
         try {
             deck = ImageIO.read(new File("src/img/poker.cards.bypx.png"));
             back = ImageIO.read(new File("src/img/playing-card-back-214x300.jpg"));
@@ -267,8 +272,9 @@ public class Game extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jtPozo = new javax.swing.JTextField();
         jToggleButton1 = new javax.swing.JToggleButton();
-        jButton1 = new javax.swing.JButton();
+        clear = new javax.swing.JButton();
         jugar = new javax.swing.JButton();
+        hide = new javax.swing.JToggleButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -298,7 +304,7 @@ public class Game extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Log");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 4, 230, 20));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 4, 180, 20));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Pozo:");
@@ -315,13 +321,13 @@ public class Game extends javax.swing.JFrame {
         });
         getContentPane().add(jToggleButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 10, -1, 20));
 
-        jButton1.setText("C");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        clear.setText("C");
+        clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                clearActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 0, -1, 30));
+        getContentPane().add(clear, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 0, -1, 30));
 
         jugar.setText("Jugar");
         jugar.addActionListener(new java.awt.event.ActionListener() {
@@ -335,6 +341,14 @@ public class Game extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, -1, -1));
+
+        hide.setText("H");
+        hide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hideActionPerformed(evt);
+            }
+        });
+        getContentPane().add(hide, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 0, 40, 30));
 
         jMenu1.setText("Juego");
 
@@ -379,10 +393,10 @@ public class Game extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
         // TODO add your handling code here:
         jTextArea1.setText("");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_clearActionPerformed
 
     private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
         // TODO add your handling code here:
@@ -406,6 +420,11 @@ public class Game extends javax.swing.JFrame {
             jugarActionPerformed(null);
         }
     }//GEN-LAST:event_jugarKeyReleased
+
+    private void hideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideActionPerformed
+        // TODO add your handling code here:
+        log = !hide.isSelected();
+    }//GEN-LAST:event_hideActionPerformed
     public String getVisibleMesaString() {
         String cards = "";
         switch (gameControl) {
@@ -500,7 +519,8 @@ public class Game extends javax.swing.JFrame {
         return bi.getSubimage(225 * y, 315 * x, 225, 315);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton clear;
+    private javax.swing.JToggleButton hide;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
